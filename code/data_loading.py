@@ -8,7 +8,7 @@ import pickle
 # Folder containing the data : -----------------------------------------------
 PATH = '/home/julie/Documents/cours/5A/projet'
 DATA_PATH = PATH + "/data/Dataset_V1_HDF5"
-os.chdir(DATA_PATH) # on se place dans le dossier contenant les données 
+#os.chdir(DATA_PATH) # on se place dans le dossier contenant les données 
 
 # loaing one time series : 
 def load_1TS(file_name:str) : 
@@ -66,14 +66,20 @@ def get_all_cst_var(df):
 
 # function to remove the constant variables individually from each dataset : 
 def remove_cst_var(cst_var) : 
+    os.chdir(DATA_PATH+'initial_datasets/')
     files = glob.glob('*.h5')
     for f in files : 
+        os.chdir(DATA_PATH+'initial_datasets/')
         df_1ST,_ = load_1TS(f) 
         df_1ST.drop(cst_var,axis=1,inplace=True)
-        df_1ST.to_pickle('cleaned_datasets/'+f[:-3]+'_without_cst_var.h5') 
+        os.chdir(DATA_PATH+'cleaned_datasets/')
+        df_1ST.to_pickle(f[:-3]+'_without_cst_var.pkl') 
 
 def mkdir(directory) : 
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-mkdir('chat')
+
+#df = pd.read_pickle(PATH+'initial_datasets/13_ST.pkl')
+#cst_var = get_all_cst_var(df)
+#remove_cst_var(cst_var) 
