@@ -176,4 +176,4 @@ def rm_correlated_mixt_var(df,data_list,var_quali,var_quanti) :
 
 #-----------------------------------------------------------------------------
 # tests : 
-data_list, df, var_quali, var_quanti = rm_correlated_var(df,data_list,var_quali,var_quanti)
+# data_list, df, var_quali, var_quanti = rm_correlated_var(df,data_list,var_quali,var_quanti)
