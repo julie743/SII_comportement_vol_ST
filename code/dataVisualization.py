@@ -4,7 +4,7 @@ import os
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 
-ROOT = '/home/julie/Documents/cours/5A/projet'
+ROOT = '/home/julie/Documents/cours/5A/projet/SII_comportement_vol_ST/'
 PATH_param = ROOT + '/data/parametres_xplane-xlsx_2022-10-04_0755'
 #os.chdir(PATH)
 data = pd.read_csv(PATH_param+"/Xplane_data.csv")

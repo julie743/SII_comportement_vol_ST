@@ -4,13 +4,21 @@ import h5py
 import os
 import glob
 import pickle 
+from set_path import PATH,DATA_PATH,DATA_PATH_chosen
 
 # Folder containing the data : -----------------------------------------------
-PATH = '/home/julie/Documents/cours/5A/projet'
-DATA_PATH = PATH + "/data/Dataset_V1_HDF5"
+#PATH = '/home/julie/Documents/cours/5A/projet/SII_comportement_vol_ST/'
+#DATA_PATH = PATH + "/data/Dataset_V2/Train/"
 #os.chdir(DATA_PATH) # on se place dans le dossier contenant les données 
 
-# loaing one time series : 
+'''
+load_1TS : loading one time series in format .h5 and put it to dataframe
+Input : 
+  - file_name : path+name of the file to load
+Output : 
+  - df : dataframe of one time series
+  - var : list of variables
+'''
 def load_1TS(file_name:str) : 
   f = h5py.File(file_name,'r')
   data = f['data']
@@ -34,17 +42,31 @@ def load_1TS(file_name:str) :
   df = pd.concat([df0,df1,df2,df3],axis=1)
   return df,var
 
-# concatenate all time series in one dataframe : 
-def get_full_df(files,var):
+'''
+get_full_df : concatenate all time series in one dataframe
+Input : 
+  - files : list of file's names
+Output : 
+  - df : dataframe of all time series
+'''
+def get_full_df(files):
     nb_scenario = len(files)
+    _,var = load_1TS(files[0])
     df = pd.DataFrame(index=np.arange(0,nb_scenario),columns=var)
     for i in range(0,nb_scenario) :
+        print(i)
         dfi,_ = load_1TS(files[i])
         for v in var : 
             df.loc[i,v] = dfi[v].to_numpy().flatten()
     return df
 
-# convert dataframe to dict : 
+'''
+df_to_dict : convert dataframe to dictionnary
+Input : 
+  - df : dataframe of all time series
+Output : 
+  - dic : dictionnary of all time series
+'''
 def df_to_dict(df) : 
     dic = df.to_dict()
     var = list(df.columns)
@@ -52,34 +74,20 @@ def df_to_dict(df) :
         dic[v] = (list(dic[v].values()))
     return dic
 
-# function to get all the constant variables
-def get_all_cst_var(df):
-    var = list(df.columns)
-    cst_var = []
-    for v in var : 
-        liste_allTS = []
-        for line in df[v] : 
-            liste_allTS.extend(line.tolist())
-        if len(np.unique(liste_allTS)) == 1 : 
-            cst_var.append(v)
-    return cst_var
 
-# function to remove the constant variables individually from each dataset : 
-def remove_cst_var(cst_var) : 
-    os.chdir(DATA_PATH+'initial_datasets/')
-    files = glob.glob('*.h5')
-    for f in files : 
-        os.chdir(DATA_PATH+'initial_datasets/')
-        df_1ST,_ = load_1TS(f) 
-        df_1ST.drop(cst_var,axis=1,inplace=True)
-        os.chdir(DATA_PATH+'cleaned_datasets/')
-        df_1ST.to_pickle(f[:-3]+'_without_cst_var.pkl') 
-
+'''
+mkdir : check if a directory exists and create it if it does not
+Input : 
+  - directory : name of the directory to create
+'''
 def mkdir(directory) : 
     if not os.path.exists(directory):
         os.makedirs(directory)
 
 
+#files = pd.read_csv('file_names.csv').squeeze()
+#df = get_full_df(files)
+#df.to_pickle("150_ST_test.pkl")
+
 #df = pd.read_pickle(PATH+'initial_datasets/13_ST.pkl')
 #cst_var = get_all_cst_var(df)
-#remove_cst_var(cst_var) 
