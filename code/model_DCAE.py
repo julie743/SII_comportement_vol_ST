@@ -13,19 +13,15 @@ import numpy as np
 import tensorflow
 tensorflow.__version__
 
-from data_preparation_DCAE import main_4D_tensor
+from data_preparation import main_4D_tensor_DCAE
 from set_path import DATA_PATH
 
-tensor4D_train,tensor4D_test = main_4D_tensor(DATA_PATH+'/Train_clean_datasets',DATA_PATH+'/Test_clean_datasets')
+# Loading the 4D tensor for the training and test set :
+tensor4D_train,tensor4D_test = main_4D_tensor_DCAE(DATA_PATH+'/Train_clean_datasets',DATA_PATH+'/Test_clean_datasets')
 
+# Input shape :
 nb_TS, window_size, nb_features, nb_windows = tensor4D_train.shape
 
-'''
-ind_train = random.sample(range(0,nb_TS),int(nb_TS*0.9))
-ind_vali = [i for i in range(nb_TS) if i not in ind_train]
-tensor4D_train = tensor4D[ind_train,:,:,:]
-tensor4D_vali= tensor4D[ind_vali,:,:,:]
-'''
 
 # encoder ---------------------------------------------------------------------
 conv_encoder = km.Sequential(name='conv_encoder')
@@ -57,5 +53,5 @@ conv_autoencoder.add(conv_decoder)
 conv_autoencoder.summary()
 
 conv_autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
-conv_autoencoder.fit(tensor4D_train, tensor4D_train, epochs=10, batch_size=10, validation_data=(tensor4D_test, tensor4D_test))
+#conv_autoencoder.fit(tensor4D_train, tensor4D_train, epochs=10, batch_size=10, validation_data=(tensor4D_test, tensor4D_test))
 # ici on a model.fit(x,y) avec x = y = x_train_conv
