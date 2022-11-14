@@ -47,7 +47,6 @@ def rescale(data_list,var_quanti,scaler=0) :
         - data_list : list of rescaled time series dataframes
     '''
     if scaler == 0 :
-        print('yes')
         scaler = MinMaxScaler()
         scaler.fit(pd.concat([df_1ST[var_quanti] for df_1ST in data_list]))
     for i in range(len(data_list)) : 
@@ -162,7 +161,7 @@ def window_stride(data_list) :
     '''
     
     len_ST = len(data_list[0].index)
-    stride_max = np.ceil(len_ST*0.05) # stride_max = 5% of total length
+    stride_max = np.ceil(len_ST*0.025) # stride_max = 2.5% of total length
     possible_strides = np.arange(1,stride_max)[::-1] # possible stride in decerasing order 
     # compute the ratio of forgotten data when applying a certain stride against the size of the window :
     left_ratio = [(len_ST % i)/(2*i) for i in possible_strides] 
@@ -297,8 +296,8 @@ def main_4D_tensor_DCAE(path_train,path_test) :
     data_list_test, _ = rescale(data_list_test,var_quanti,scaler) 
     
     # 4. resampling the time series to reduce the time resolution
-    data_list, chosen_resolution = resample(data_list,len_ST,ref_time)
-    data_list_test, _ = resample(data_list_test,len_ST,ref_time,chosen_resolution)
+    #data_list, chosen_resolution = resample(data_list,len_ST,ref_time)
+    #data_list_test, _ = resample(data_list_test,len_ST,ref_time,chosen_resolution)
     
     # 5. choosing the window and stride on the training data
     size_window, stride = window_stride(data_list) 
