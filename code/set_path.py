@@ -13,11 +13,11 @@ at the beginning of all your other files, they will be referenced with the same
 path 
 '''
 # Folder containing the data : -----------------------------------------------
-PATH = '/content/drive/My Drive/SII_comportement_vol_ST'
+PATH = '/home/julie/Documents/cours/5A/projet/SII_comportement_vol_ST'
 DATA_PATH = PATH + "/data/Dataset_V2"
 
 # loading training or test data : 
-DATA_PATH_TRAIN = DATA_PATH + "/Train"
-DATA_PATH_TEST = DATA_PATH + "/Test"
+DATA_PATH_TRAIN = DATA_PATH + "/Train_clean_datasets"
+DATA_PATH_TEST = DATA_PATH + "/_clean_datasets"
 DATA_PATH_chosen = DATA_PATH_TRAIN # the path we want to use now
 

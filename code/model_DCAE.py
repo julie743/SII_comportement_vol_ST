@@ -8,23 +8,38 @@ Created on Wed Nov  2 19:39:39 2022
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 import tensorflow.keras.models as km
 import tensorflow.keras.layers as kl
+from tensorflow.keras.models import load_model
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow
 tensorflow.__version__
 
+import os
+from data_loading import mkdir
 from data_preparation import main_4D_tensor_DCAE
 from set_path import DATA_PATH
 
-# Loading the 4D tensor for the training and test set :
-tensor4D_train,tensor4D_test = main_4D_tensor_DCAE(DATA_PATH+'/Train_clean_datasets',DATA_PATH+'/Test_clean_datasets')
-
-# Input shape :
-nb_TS, window_size, nb_features, nb_windows = tensor4D_train.shape
-
 # First model : reduction according to time only ------------------------------
-# SANS MAXPOOLING ET UPSAMPLING
+# DCAE WITHOUT MAXPOOLING ET UPSAMPLING
 def DCAE_architecture1 (window_size, nb_features, nb_windows) :
+    '''
+    Description of the function : implement the second architecture of the 
+    1D-DCAE which offers dimension reduction both on the time steps and the 
+    features
+    
+    Inputs
+    ----------
+    window_size : (int) size of the sliding window
+    nb_features : (int) number of features in the data
+    nb_windows : (int) number of slidingwindows
+
+    Outputs
+    -------
+    conv_encoder : convolutional encoder model (keras)
+    conv_decoder : convolutional decoder model (keras)
+    conv_autoencoder : convolutional autoencoder model (keras)
+    '''
+    
     conv_encoder = km.Sequential(name='conv_encoder')
     conv_encoder.add(kl.Conv2D(nb_windows, (10, 1), activation = 'relu', input_shape=(window_size, nb_features, nb_windows), padding = 'same'))
     # rk : input shape is of format : (rows, cols, channels) 
@@ -60,12 +75,30 @@ def DCAE_architecture1 (window_size, nb_features, nb_windows) :
 # AVEC MAXPOOLING ET UPSAMPLING 
 
 def DCAE_architecture2 (window_size, nb_features, nb_windows) :
-# encoder ---------------------------------------------------------------------
+    '''
+    Description of the function : implement the second architecture of the 
+    1D-DCAE which offers dimension reduction both on the time steps and the 
+    features
+    
+    Inputs
+    ----------
+    window_size : (int) size of the sliding window
+    nb_features : (int) number of features in the data
+    nb_windows : (int) number of slidingwindows
+
+    Outputs
+    -------
+    conv_encoder : convolutional encoder model (keras)
+    conv_decoder : convolutional decoder model (keras)
+    conv_autoencoder : convolutional autoencoder model (keras)
+    '''
+    
+    # encoder -----------------------------------------------------------------
     conv_encoder2 = km.Sequential(name='conv_encoder')
     conv_encoder2.add(kl.Conv2D(nb_windows, (10, 1), activation = 'relu', input_shape=(window_size, nb_features, nb_windows), padding = 'same'))
     # rk : input shape is of format : (rows, cols, channels) 
     conv_encoder2.add(kl.Conv2D(64, (10, 1), activation = 'relu', padding = 'same'))
-    conv_encoder2.add(kl.MaxPooling2D(pool_size=(2, 2), padding = 'same'))
+    conv_encoder2.add(kl.MaxPooling2D(pool_size=(1, 2), padding = 'same'))
     conv_encoder2.add(kl.Conv2D(128, (10, 1), activation = 'relu', padding = 'same'))
     conv_encoder2.add(kl.Conv2D(128, (1, 3), activation = 'relu', padding = 'same'))
     conv_encoder2.add(kl.Dense(384, activation = 'relu'))
@@ -79,7 +112,7 @@ def DCAE_architecture2 (window_size, nb_features, nb_windows) :
     conv_decoder2 = km.Sequential(name='conv_decoder')
     conv_decoder2.add(kl.Dense(384, activation = 'relu', input_shape=output_layer_shape2))
     conv_decoder2.add(kl.Conv2D(128, (1, 3), activation = 'relu', padding = 'same'))
-    conv_decoder2.add(kl.UpSampling2D((2, 2)))
+    conv_decoder2.add(kl.UpSampling2D((1, 2)))
     conv_decoder2.add(kl.Conv2D(128, (10, 1), activation = 'relu', padding = 'same'))
     conv_decoder2.add(kl.Conv2D(64, (10, 1), activation = 'relu', padding = 'same'))
     conv_decoder2.add(kl.Conv2D(nb_windows, (10, 1), activation = 'sigmoid', padding = 'same'))
@@ -95,19 +128,16 @@ def DCAE_architecture2 (window_size, nb_features, nb_windows) :
     return conv_encoder2, conv_decoder2, conv_autoencoder2
 
 
-
-# Fit and test ----------------------------------------------------------------
-
-conv_encoder, conv_decoder, conv_autoencoder = DCAE_architecture1(window_size, nb_features, nb_windows)
-history = conv_autoencoder.fit(tensor4D_train, tensor4D_train, epochs=12, batch_size=10, validation_data=(tensor4D_test, tensor4D_test))
-score = conv_autoencoder.evaluate(tensor4D_train, tensor4D_train)
-print('score :', score)
-tensor4D_pred = conv_autoencoder.predict((tensor4D_test))
-#encoded_test_data = conv_encoder.predict(tensor4D_test)
-
-
 # Evaluation methods to compare several architectures
 def plot_loss(history, arch=1):
+    '''
+    Description of the function : plot the loss of the training of the DCAE
+    
+    Inputs
+    ------
+    history : history obtained from the training of the DCAE
+    arch : (int) chosen architecture 1 or 2. The default is 1.
+    '''
     plt.figure()
     plt.plot(history.history["loss"], label="Training Loss")
     plt.plot(history.history["val_loss"], label="Validation Loss")
@@ -115,7 +145,17 @@ def plot_loss(history, arch=1):
     plt.legend()
     plt.show()
     
+# to delete : 
 def evaluate_decoding(X_test, conv_encoder, conv_decoder) : 
+    '''
+    Description of the function : print error of the DCAE
+    
+    Inputs
+    ----------
+    X_test : np.darray of test data
+    conv_encoder : convolutional encoder built with the DCAE
+    conv_decoder : convolutional decoder built with the DCAE
+    '''
     encoded_data = conv_encoder(X_test).numpy()
     decoded_data = conv_decoder(encoded_data).numpy()
     nb_TS_test, window_size, nb_features, nb_windows = X_test.shape
@@ -130,6 +170,15 @@ def evaluate_decoding(X_test, conv_encoder, conv_decoder) :
     plt.show()
 
 def print_stats(true_data, pred_data):
+    '''
+    Description of the function : print metrics for the reconstruction of the 
+    test set by the autoencoder
+    
+    Inputs
+    ----------
+    true_data : np.darray of test data
+    pred_data : np.darray of predicted data by the DCAE
+    '''
     nb_TS_test, window_size, nb_features, nb_windows = true_data.shape
     true_data_2D = true_data.reshape(nb_TS_test*window_size*nb_windows,nb_features)
     pred_data_2D = pred_data.reshape(nb_TS_test*window_size*nb_windows,nb_features)
@@ -137,16 +186,76 @@ def print_stats(true_data, pred_data):
     print("MAE = {}".format((mean_absolute_error(true_data_2D, pred_data_2D))))
     print("R2 = {}".format(r2_score(true_data_2D, pred_data_2D)))
 
-plot_loss(history, arch=2)
-print_stats(true_data=tensor4D_test, pred_data=tensor4D_pred)
-evaluate_decoding(tensor4D_test,conv_encoder, conv_decoder)
+def save_weigths(conv_encoder, file_name) :
+    '''
+    Description of the function : save trained encoder model
+    Inputs
+    ------
+    con_encoder : convolutional encoder built with the DCAE
+    file_name : name to give to the file
+    '''
+    directory_weigths = os.path.join(DATA_PATH,'encoder_weights')
+    mkdir(directory_weigths)
+    conv_encoder.save(os.path.join(directory_weigths,file_name)) # save encoder's weigth
+    
+    
+def load_encoder_data(path,X_train,X_test) :
+    '''
+    Description of the function : load the trained encoder model
+    
+    Inputs
+    -------
+    path : (string) path where to find the encoder model's weigths
+    X_train : np.darray of train data
+    X_test : np.darray of test data
+
+    Outputs
+    -------
+    X_train_encode : np.darray of encoded train data
+    X_test_encode : np.darray of encoded test data
+    '''
+    encoder = load_model(path)
+    # encode the train data
+    X_train_encode = encoder.predict(X_train)
+    # encode the test data
+    X_test_encode = encoder.predict(X_test)
+    return X_train_encode, X_test_encode
+
+#-------------------------------------------------------------------------------
+def main_DCAE(file_name='encoder.h5',epochs=15,batch_size=10) :
+    '''
+    Description of the function : calls the previous functions in the correct 
+    order to load the data, build the DCAE, train it, plot the results and save
+    the trained model
+
+    Inputs
+    -------
+    file_name : (string) path where to find the encoder model's weigths
+    epochs : (int) The default is 15.
+    batch_size : (int) The default is 10.
+    '''
+    # Loading the 4D tensor for the training and test set :
+    tensor4D_train,tensor4D_test = main_4D_tensor_DCAE(DATA_PATH+'/Train_clean_datasets',DATA_PATH+'/Test_clean_datasets')
+    
+    # Input shape :
+    nb_TS, window_size, nb_features, nb_windows = tensor4D_train.shape
+    
+    # Fit and test the model --------------------------------------------------
+    conv_encoder, conv_decoder, conv_autoencoder = DCAE_architecture1(window_size, nb_features, nb_windows)
+    history = conv_autoencoder.fit(tensor4D_train, tensor4D_train, epochs=epochs, batch_size=batch_size, validation_data=(tensor4D_test, tensor4D_test))
+    tensor4D_pred = conv_encoder.predict(tensor4D_test)
+    
+    # Plot results ------------------------------------------------------------
+    score = conv_autoencoder.evaluate(tensor4D_train, tensor4D_train)
+    print('score :', score)
+    plot_loss(history, arch=1)
+    print_stats(true_data=tensor4D_test, pred_data=tensor4D_pred)
+    evaluate_decoding(tensor4D_test,conv_encoder, conv_decoder)
+        
+    # save model's weigths
+    save_weigths(conv_encoder,file_name)
 
 
-
-
-
-
-
-
+#main_DCAE(epochs=15,batch_size=10)
 
 
