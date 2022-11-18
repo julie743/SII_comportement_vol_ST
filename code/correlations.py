@@ -7,22 +7,11 @@ Created on Mon Oct 24 23:46:48 2022
 """
 
 # loading the libraries : ----------------------------------------------------
-from sklearn.decomposition import PCA
-import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-import datetime
-import os
-import glob
-import copy 
-from itertools import combinations
-from scipy.stats import chi2_contingency
 from dython.nominal import associations
 
-from sklearn.preprocessing import scale
-from pandas.plotting import scatter_matrix
 
-import data_loading as DL
 from set_path import PATH,DATA_PATH,DATA_PATH_chosen
 
 # loading the list of variables and df : -------------------------------------

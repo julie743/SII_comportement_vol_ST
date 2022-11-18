@@ -2,8 +2,6 @@ import numpy as np
 import pandas as pd
 import h5py
 import os
-import glob
-import pickle 
 from set_path import PATH,DATA_PATH,DATA_PATH_chosen
 
 # Folder containing the data : -----------------------------------------------
