@@ -141,8 +141,9 @@ def plot_loss(history, arch=1):
     plt.figure()
     plt.plot(history.history["loss"], label="Training Loss")
     plt.plot(history.history["val_loss"], label="Validation Loss")
-    plt.title('loss variations - training of the 1D-DCAE architecture ' + str(arch) +' (resampled data)')
+    plt.title('loss variations - training of the 1D-DCAE architecture ' + str(arch) )
     plt.legend()
+    plt.xticks(np.arange(0, len(history.history["loss"]),2))
     plt.show()
     
 # to delete : 
@@ -222,7 +223,7 @@ def load_encoder_data(path,X_train,X_test) :
     return X_train_encode, X_test_encode
 
 #-------------------------------------------------------------------------------
-def main_DCAE(file_name='encoder.h5',epochs=15,batch_size=10) :
+def main_DCAE(arch=1,file_name='encoder_architecture1.h5',epochs=15,batch_size=10) :
     '''
     Description of the function : calls the previous functions in the correct 
     order to load the data, build the DCAE, train it, plot the results and save
@@ -241,14 +242,18 @@ def main_DCAE(file_name='encoder.h5',epochs=15,batch_size=10) :
     nb_TS, window_size, nb_features, nb_windows = tensor4D_train.shape
     
     # Fit and test the model --------------------------------------------------
-    conv_encoder, conv_decoder, conv_autoencoder = DCAE_architecture1(window_size, nb_features, nb_windows)
+    if arch == 1 :
+      DCAE_model = DCAE_architecture1
+    else : 
+      DCAE_model = DCAE_architecture2
+    conv_encoder, conv_decoder, conv_autoencoder = DCAE_model(window_size, nb_features, nb_windows)
     history = conv_autoencoder.fit(tensor4D_train, tensor4D_train, epochs=epochs, batch_size=batch_size, validation_data=(tensor4D_test, tensor4D_test))
-    tensor4D_pred = conv_encoder.predict(tensor4D_test)
+    tensor4D_pred = conv_autoencoder.predict(tensor4D_test)
     
     # Plot results ------------------------------------------------------------
     score = conv_autoencoder.evaluate(tensor4D_train, tensor4D_train)
     print('score :', score)
-    plot_loss(history, arch=1)
+    plot_loss(history, arch=arch)
     print_stats(true_data=tensor4D_test, pred_data=tensor4D_pred)
     evaluate_decoding(tensor4D_test,conv_encoder, conv_decoder)
         
