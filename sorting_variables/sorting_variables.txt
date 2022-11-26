@@ -1,0 +1,18 @@
+Sorting variables
+-----------------
+
+1. Identifying qualitative and quantitative variables : 
+VAR_QUANTI_TAB_all.pkl : all quantitative variables
+VAR_QUALI_TAB_all.pkl : all qualitative variables
+
+2. Identifying variables that are constant through time and equal between all time series of the training set : 
+VAR_QUANTI_cst.pkl : all quantitative variables that are constant and equal
+VAR_QUALI_cst.pkl : all qualitative variables that are constant and equal
+
+3. Identifying variables that are highly correlated => from each group of highly correlated variables we only keep one :
+VAR_QUANTI_correlated_deleted.pkl : non constant quantitative variables that are part of a group of highly correlated variables and have been deleted
+VAR_QUALI_cst.pkl : non constant qualitative variables that are part of a group of highly correlated variables and have been deleted
+
+VAR_QUANTI_TAB.pkl : final selected quantitative variables
+VAR_QUALI_TAB.pkl : final selected qualitative variables
+
