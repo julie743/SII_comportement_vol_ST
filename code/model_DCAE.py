@@ -47,7 +47,7 @@ def DCAE_architecture1 (window_size, nb_features, nb_windows) :
     conv_encoder.add(kl.Conv2D(128, (10, 1), activation = 'relu', padding = 'same'))
     conv_encoder.add(kl.Conv2D(128, (1, 3), activation = 'relu', padding = 'same'))
     conv_encoder.add(kl.Dense(384, activation = 'relu'))
-    conv_encoder.add(kl.Dense(5, activation = 'relu'))
+    conv_encoder.add(kl.Dense(5, activation = 'relu')) #5
     conv_encoder.summary()
     
     # shape of the output layer of the encoder part 
@@ -102,7 +102,7 @@ def DCAE_architecture2 (window_size, nb_features, nb_windows) :
     conv_encoder2.add(kl.Conv2D(128, (10, 1), activation = 'relu', padding = 'same'))
     conv_encoder2.add(kl.Conv2D(128, (1, 3), activation = 'relu', padding = 'same'))
     conv_encoder2.add(kl.Dense(384, activation = 'relu'))
-    conv_encoder2.add(kl.Dense(5, activation = 'relu'))
+    conv_encoder2.add(kl.Dense(5, activation = 'relu')) #5
     conv_encoder2.summary()
     
     # shape of the output layer of the encoder part 

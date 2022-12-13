@@ -18,6 +18,6 @@ DATA_PATH = PATH + "/data/Dataset_V2"
 
 # loading training or test data : 
 DATA_PATH_TRAIN = DATA_PATH + "/Train_clean_datasets"
-DATA_PATH_TEST = DATA_PATH + "/_clean_datasets"
+DATA_PATH_TEST = DATA_PATH + "/Test_clean_datasets"
 DATA_PATH_chosen = DATA_PATH_TRAIN # the path we want to use now
 

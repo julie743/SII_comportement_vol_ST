@@ -215,3 +215,34 @@ def rm_correlated_var(data_list,var_quali,var_quanti) :
 #-----------------------------------------------------------------------------
 # tests : 
 #data_list, var_quali, var_quanti = rm_correlated_var(data_list,var_quali,var_quanti)
+
+
+'''
+var_quanti = pd.read_pickle(DATA_PATH_chosen+'/VAR_QUANTI_TAB.pkl')
+var_quali = pd.read_pickle(DATA_PATH_chosen+'/VAR_QUALI_TAB.pkl')
+
+
+var_quanti_without_cst = pd.read_pickle(DATA_PATH_chosen+'/VAR_QUANTI_TAB_without_cst.pkl')
+var_quali_without_cst = pd.read_pickle(DATA_PATH_chosen+'/VAR_QUALI_TAB_without_cst.pkl')
+
+
+var_quanti_all = pd.read_pickle(DATA_PATH+'/VAR_QUANTI_TAB_all.pkl')
+var_quali_all = pd.read_pickle(DATA_PATH+'/VAR_QUALI_TAB_all.pkl')
+
+
+var_quanti_cst = [v for v in var_quanti_all if not v in list(var_quanti_without_cst.squeeze())]
+var_quali_cst = [v for v in var_quali_all if not v in list(var_quali_without_cst.squeeze())]
+
+pd.DataFrame(var_quanti_cst).to_pickle(DATA_PATH+'/VAR_QUANTI_cst.pkl')
+pd.DataFrame(var_quali_cst).to_pickle(DATA_PATH+'/VAR_QUALI_cst.pkl')
+
+var_quanti_corr = [v for v in list(var_quanti_without_cst.squeeze()) if not v in list(var_quanti.squeeze())]
+var_quali_corr = [v for v in list(var_quali_without_cst.squeeze()) if not v in list(var_quali.squeeze())]
+
+pd.DataFrame(var_quanti_cst).to_pickle(DATA_PATH+'/VAR_QUANTI_correlated_deleted.pkl')
+pd.DataFrame(var_quali_cst).to_pickle(DATA_PATH+'/VAR_QUALI_correlated_deleted.pkl')
+'''
+
+
+
+

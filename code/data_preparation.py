@@ -308,8 +308,8 @@ def main_4D_tensor_DCAE(path_train,path_test) :
     return tensor4D_train,tensor4D_test
 
 
-path_train = DATA_PATH+'/Train_clean_datasets'
-path_test = DATA_PATH+'/Test_clean_datasets'
+#path_train = DATA_PATH+'/Train_clean_datasets'
+#path_test = DATA_PATH+'/Test_clean_datasets'
 #tensor4D_train,tensor4D_test = main_4D_tensor_DCAE(path_train,path_test)
 
 
