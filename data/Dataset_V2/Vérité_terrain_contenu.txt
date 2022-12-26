@@ -1,0 +1,8 @@
+Format des fichiers vérité terrain:
+
+Pour chaque simulation, on donne dans l'ordre:
+- le numéro de la simulation
+- le nom du scénario particulier (comme le numéro, mais plus explicite)
+- le nom du scénario (quelle manœuvre est effectuée)
+- le nom de l'erreur (ou None si pas d'erreur)
+- le temps auquel l'erreur est déclenchée (en secondes)
