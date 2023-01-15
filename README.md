@@ -12,7 +12,7 @@ Description des fichiers de code :
   - `set_path.py` : function to set path for loading the data (the other functions pick up their path from this file)
 
   2) First feature selection : 
-  - `data_preprocessing.ypnb` : dtermine the type of data : qualitative/ quantitative
+  - `data_preprocessing.ypnb` : determine the type of data : qualitative/ quantitative
   - `correlations.py` : remove constant variables and keep only one variable from each group of highly correlated variables
 
   3) Dimension reduction with DCAE (Deep Convolutional Autoencoder) : 
