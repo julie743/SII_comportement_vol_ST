@@ -27,7 +27,7 @@ Description of the code files:
 The codes were run on google collab in order to have access to a GPU to accelerate the training of the models. The following notebooks are using the functions implemented in the folder utilities:
   - `creates_variable_lists.ipynb`: determine the type of data : qualitative/ quantitative
   - `data_proprocessing.ipynb`: preprocess the datasets for the DCAE or MiniRocket.
-  - `run_model_DCAE.ipynb`: run the DCAE tu reduce the dataset
+  - `run_model_DCAE.ipynb`: run the DCAE to reduce the dataset
   - `run_model_MiniRocket.ipynb`: run the model MiniRocket and predicts the classification.
  
 To re-use our codes, the first thing to do is to modify the path defined in the file `code/utilities/set_path.py`. Once this path is set, all other files pick up the path from there. 
