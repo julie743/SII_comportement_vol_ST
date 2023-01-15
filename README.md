@@ -33,8 +33,8 @@ The codes were run on google collab in order to have access to a GPU to accelera
 To re-use our codes, the first thing to do is to modify the path defined in the file `code/utilities/set_path.py`. Once this path is set, all other files pick up the path from there. 
 
 **In the folder results:** Results of the training of the DCAE and miniRocket models
-  - results_DCAE: plots for DCAE training.
-  - miniRocket_images: confusion matrices for MiniRocket predictions. 
+  - `results_DCAE`: plots for DCAE training.
+  - `miniRocket_images`: confusion matrices for MiniRocket predictions. 
   
 **In the folder sorting_variables:** List of the variables selected after the preprocessing of the data. A .txt file in this folder describes the content of the .pkl files.
 
