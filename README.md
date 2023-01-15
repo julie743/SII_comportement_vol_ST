@@ -6,7 +6,7 @@ https://voip.siinergy.net/meet/florianmontels
 Description des fichiers de code : 
 
 **In the folder code/utilities :** 
-  1) Chargement des données : 
+  1) Data loading : 
   - `data_loading.py` : load the .h5 files provided by SII 
   - `retrieve_labels.ypnb` : identify each label corresponding to each time series
   - `set_path.py` : function to set path for loading the data (the other functions pick up their path from this file)
